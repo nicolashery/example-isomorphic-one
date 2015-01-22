@@ -1,0 +1,13 @@
+{
+  "name": "example-isomorphic-one",
+  "scripts": {
+    "start": "node src/server"
+  },
+  "dependencies": {
+    "body-parser": "1.10.2",
+    "debug": "2.1.1",
+    "express": "4.11.1",
+    "immutable": "3.6.2",
+    "superagent": "0.21.0"
+  }
+}
