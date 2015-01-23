@@ -1,28 +1,37 @@
+require('node-jsx').install({extension: '.jsx'});
+
+var fs = require('fs');
 var express = require('express');
 var bodyParser = require('body-parser');
+var React = require('react');
 var debug = require('debug')('app:server');
 var api = require('./api');
+var static = require('./static');
 var apiClient = require('../apiClient');
+var App = require('../components/App.jsx');
+
+var indexHtml = fs.readFileSync('index.html').toString();
 
 var app = express();
 
 app.use(bodyParser.json());
-
 app.use('/api', api);
+app.use('/static', static);
+
+var renderApp = function(data) {
+  data = data || {};
+  var htmlRegex = /¡HTML!/;
+  var dataRegex = /¡DATA!/;
+
+  var html = React.renderToString(React.createElement(App));
+  return indexHtml
+    .replace(htmlRegex, html)
+    .replace(dataRegex, JSON.stringify(data));
+};
 
 app.get('/', function(req, res) {
-  apiClient.getContacts({
-    url: 'http://localhost:3000/api'
-  }, function(err, contacts) {
-    if (err) {
-      return res.status(500).send('Error: ' + err.toString());
-    }
-    var body = 'Id, Name\n';
-    contacts.forEach(function(contact) {
-      body = body + contact.id + ', ' + contact.name + '\n';
-    });
-    res.send(body);
-  });
+  var html = renderApp();
+  res.send(html);
 });
 
 var server = app.listen(3000, function () {

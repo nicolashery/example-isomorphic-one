@@ -8,6 +8,14 @@
     "debug": "2.1.1",
     "express": "4.11.1",
     "immutable": "3.6.2",
+    "node-jsx": "0.12.4",
+    "react": "0.12.2",
+    "react-router": "0.11.6",
     "superagent": "0.21.0"
+  },
+  "devDependencies": {
+    "jsx-loader": "0.12.2",
+    "webpack": "1.5.3",
+    "webpack-dev-middleware": "1.0.11"
   }
 }
