@@ -1,6 +1,11 @@
 var React = require('react');
+var Router = require('react-router');
 var App = require('../components/App.jsx');
 
 window.React = React;
 
-React.render(React.createElement(App), document.getElementById('app'));
+var routes = require('../routes.jsx');
+
+Router.run(routes, Router.HistoryLocation, function(Handler, state) {
+  React.render(React.createElement(Handler), document.getElementById('app'));
+});

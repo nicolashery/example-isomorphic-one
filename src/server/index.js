@@ -4,6 +4,8 @@ var fs = require('fs');
 var express = require('express');
 var bodyParser = require('body-parser');
 var React = require('react');
+var Router = require('react-router');
+var routes = require('../routes.jsx');
 var debug = require('debug')('app:server');
 var api = require('./api');
 var static = require('./static');
@@ -16,26 +18,53 @@ var app = express();
 
 app.use(bodyParser.json());
 app.use('/api', api);
-app.use('/static', static);
+app.use(static);
 
-var renderApp = function(data) {
-  data = data || {};
+var renderApp = function(location, cb) {
+  var data = {};
   var htmlRegex = /¡HTML!/;
   var dataRegex = /¡DATA!/;
 
-  var html = React.renderToString(React.createElement(App));
-  return indexHtml
-    .replace(htmlRegex, html)
-    .replace(dataRegex, JSON.stringify(data));
+  var router = Router.create({
+    routes: routes,
+    location: location,
+    onAbort: function(redirect) {
+      cb({redirect: redirect});
+    },
+    onError: function(err) {
+      debug('Routing Error', err);
+    }
+  });
+
+  router.run(function(Handler, state) {
+    var html;
+    if (state.routes[0].name === 'not-found') {
+      html = React.renderToStaticMarkup(React.createElement(Handler));
+      cb({notFound: true}, html);
+      return;
+    }
+    var appHtml = React.renderToString(React.createElement(Handler));
+    html = indexHtml
+      .replace(htmlRegex, appHtml)
+      .replace(dataRegex, JSON.stringify(data));
+    cb(null, html);
+  });
 };
 
-app.get('/', function(req, res) {
-  var html = renderApp();
-  res.send(html);
+app.get('*', function(req, res) {
+  renderApp(req.url, function(err, html) {
+    if (err && err.notFound) {
+      return res.status(404).send(html);
+    }
+    if (err && err.redirect) {
+      return res.redirect(303, err.redirect.to);
+    }
+    res.send(html);
+  });
 });
 
 var server = app.listen(3000, function () {
-  var host = server.address().address
-  var port = server.address().port
+  var host = server.address().address;
+  var port = server.address().port;
   debug('App listening at http://%s:%s', host, port);
 });
