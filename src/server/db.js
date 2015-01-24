@@ -21,6 +21,14 @@ db.addContact = function(contact) {
   return contact.set('id', id);
 };
 
+db.getContact = function(id) {
+  var contact = this._state.getIn(['contacts', id]);
+  if (!contact) {
+    return null;
+  }
+  return contact.set('id', id);
+};
+
 db.updateContact = function(id, updates) {
   var contact = this._state.getIn(['contacts', id]);
   if (!contact) {

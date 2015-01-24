@@ -1,11 +1,15 @@
 var React = require('react');
 var Router = require('react-router');
-var App = require('../components/App.jsx');
+var fetchData = require('../utils/fetchData');
+var routes = require('../routes.jsx');
 
 window.React = React;
 
-var routes = require('../routes.jsx');
-
 Router.run(routes, Router.HistoryLocation, function(Handler, state) {
-  React.render(React.createElement(Handler), document.getElementById('app'));
+  fetchData(state.routes, state.params, function(err, data) {
+    React.render(
+      React.createElement(Handler, {data: data}),
+      document.getElementById('app')
+    );
+  });
 });

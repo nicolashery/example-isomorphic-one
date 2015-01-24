@@ -9,8 +9,7 @@ var routes = require('../routes.jsx');
 var debug = require('debug')('app:server');
 var api = require('./api');
 var static = require('./static');
-var apiClient = require('../apiClient');
-var App = require('../components/App.jsx');
+var fetchData = require('../utils/fetchData');
 
 var indexHtml = fs.readFileSync('index.html').toString();
 
@@ -21,7 +20,6 @@ app.use('/api', api);
 app.use(static);
 
 var renderApp = function(location, cb) {
-  var data = {};
   var htmlRegex = /¡HTML!/;
   var dataRegex = /¡DATA!/;
 
@@ -37,17 +35,20 @@ var renderApp = function(location, cb) {
   });
 
   router.run(function(Handler, state) {
-    var html;
     if (state.routes[0].name === 'not-found') {
-      html = React.renderToStaticMarkup(React.createElement(Handler));
+      var html = React.renderToStaticMarkup(React.createElement(Handler));
       cb({notFound: true}, html);
       return;
     }
-    var appHtml = React.renderToString(React.createElement(Handler));
-    html = indexHtml
-      .replace(htmlRegex, appHtml)
-      .replace(dataRegex, JSON.stringify(data));
-    cb(null, html);
+    fetchData(state.routes, state.params, function(err, data) {
+      var appHtml = React.renderToString(
+        React.createElement(Handler, {data: data})
+      );
+      var html = indexHtml
+        .replace(htmlRegex, appHtml)
+        .replace(dataRegex, JSON.stringify(data));
+      cb(null, html);
+    });
   });
 };
 
