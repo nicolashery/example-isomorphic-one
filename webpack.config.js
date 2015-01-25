@@ -4,7 +4,7 @@ var config = {
   entry: './src/client',
   output: {
     path: path.join(__dirname, 'build'),
-    filename: 'bundle.js'
+    filename: 'client.js'
   },
   module: {
     loaders: [

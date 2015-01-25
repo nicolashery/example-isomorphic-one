@@ -1,18 +1,28 @@
 var React = require('react');
 var map = require('lodash-node/modern/collections/map');
-var Link = require('react-router').Link;
-var api = require('../api');
+var ContactStore = require('../stores/ContactStore');
+var StoreMixin = require('fluxible').StoreMixin;
 
 var ContactList = React.createClass({
+  mixins: [StoreMixin],
   statics: {
-    fetchData: function(cb) { api.getContacts(cb); }
+    storeListeners: {
+      handleStoreChange: [ContactStore]
+    }
   },
 
-  getContacts: function() {
-    if (!(this.props && this.props.data && this.props.data.contacts)) {
-      return [];
-    }
-    return this.props.data.contacts;
+  getInitialState: function() {
+    return this.getStateFromStores();
+  },
+
+  getStateFromStores: function () {
+    return {
+      contacts: this.getStore(ContactStore).getContacts(),
+    };
+  },
+
+  handleStoreChange: function() {
+    this.setState(this.getStateFromStores());
   },
 
   render: function() {
@@ -25,11 +35,11 @@ var ContactList = React.createClass({
   },
 
   renderContacts: function() {
-    var contacts = this.getContacts();
+    var contacts = this.state.contacts;
     return map(contacts, function(contact) {
       return (
         <li key={contact.id}>
-          <Link to="contact" params={{id: contact.id}}>{contact.name}</Link>
+          {contact.name}
         </li>
       );
     });

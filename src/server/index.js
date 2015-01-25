@@ -1,71 +1,55 @@
 require('node-jsx').install({extension: '.jsx'});
-
-var fs = require('fs');
+var path = require('path');
 var express = require('express');
 var bodyParser = require('body-parser');
+var serialize = require('serialize-javascript');
 var React = require('react');
-var Router = require('react-router');
-var routes = require('../routes.jsx');
 var debug = require('debug')('app:server');
+var app = require('../app');
 var api = require('./api');
-var static = require('./static');
-var fetchData = require('../utils/fetchData');
+var HtmlComponent = React.createFactory(require('./Html.jsx'));
+var loadData = require('../actions/loadData');
 
-var indexHtml = fs.readFileSync('index.html').toString();
+var server = express();
 
-var app = express();
+server.use(bodyParser.json());
+server.use('/api', api);
+server.use('/public',
+  express.static(path.join(__dirname, '..', '..', 'build')));
 
-app.use(bodyParser.json());
-app.use('/api', api);
-app.use(static);
+server.use(function(req, res, next) {
+    var context = app.createContext();
 
-var renderApp = function(location, cb) {
-  var htmlRegex = /¡HTML!/;
-  var dataRegex = /¡DATA!/;
+    debug('Executing loadData');
+    context.getActionContext().executeAction(loadData, {}, function(err) {
+      if (err) {
+        if (err.status && err.status === 404) {
+          next();
+        }
+        else {
+          next(err);
+        }
+        return;
+      }
 
-  var router = Router.create({
-    routes: routes,
-    location: location,
-    onAbort: function(redirect) {
-      cb({redirect: redirect});
-    },
-    onError: function(err) {
-      debug('Routing Error', err);
-    }
-  });
+      debug('Exposing context state');
+      var exposed = 'window.App=' + serialize(app.dehydrate(context)) + ';';
 
-  router.run(function(Handler, state) {
-    if (state.routes[0].name === 'not-found') {
-      var html = React.renderToStaticMarkup(React.createElement(Handler));
-      cb({notFound: true}, html);
-      return;
-    }
-    fetchData(state.routes, state.params, function(err, data) {
-      var appHtml = React.renderToString(
-        React.createElement(Handler, {data: data})
-      );
-      var html = indexHtml
-        .replace(htmlRegex, appHtml)
-        .replace(dataRegex, JSON.stringify(data));
-      cb(null, html);
+      debug('Rendering application component into html');
+      var AppComponent = app.getAppComponent();
+      var html = React.renderToStaticMarkup(HtmlComponent({
+        state: exposed,
+        markup: React.renderToString(AppComponent({
+          context: context.getComponentContext()
+        }))
+      }));
+
+      debug('Sending markup');
+      res.write(html);
+      res.end();
     });
-  });
-};
-
-app.get('*', function(req, res) {
-  renderApp(req.url, function(err, html) {
-    if (err && err.notFound) {
-      return res.status(404).send(html);
-    }
-    if (err && err.redirect) {
-      return res.redirect(303, err.redirect.to);
-    }
-    res.send(html);
-  });
 });
 
-var server = app.listen(3000, function () {
-  var host = server.address().address;
-  var port = server.address().port;
-  debug('App listening at http://%s:%s', host, port);
-});
+var port = process.env.PORT || 3000;
+server.listen(port);
+console.log('Listening on port ' + port);

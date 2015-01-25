@@ -1,15 +1,24 @@
 var React = require('react');
-var Router = require('react-router');
-var fetchData = require('../utils/fetchData');
-var routes = require('../routes.jsx');
+var debug = require('debug');
+var bootstrapDebug = debug('app:client');
+var app = require('../app');
+var dehydratedState = window.App; // Sent from the server
 
-window.React = React;
+window.React = React; // For chrome dev tool support
+debug.enable('app:*');
 
-Router.run(routes, Router.HistoryLocation, function(Handler, state) {
-  fetchData(state.routes, state.params, function(err, data) {
-    React.render(
-      React.createElement(Handler, {data: data}),
-      document.getElementById('app')
-    );
+bootstrapDebug('Rehydrating app');
+app.rehydrate(dehydratedState, function (err, context) {
+  if (err) {
+      throw err;
+  }
+  window.context = context;
+  var mountNode = document.getElementById('app');
+
+  bootstrapDebug('React rendering');
+  React.render(app.getAppComponent()({
+    context: context.getComponentContext()
+  }), mountNode, function () {
+    bootstrapDebug('React rendered');
   });
 });

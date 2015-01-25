@@ -1,23 +1,25 @@
 {
   "name": "example-isomorphic-one",
   "scripts": {
-    "start": "node src/server"
+    "start": "node src/server",
+    "dev": "nodemon --watch src & webpack --watch --devtool eval-source-map",
+    "build": "webpack -p"
   },
   "dependencies": {
     "body-parser": "1.10.2",
-    "contra": "1.8.0",
     "debug": "2.1.1",
     "express": "4.11.1",
+    "fluxible": "0.1.5",
     "immutable": "3.6.2",
+    "jsx-loader": "0.12.2",
     "lodash-node": "2.4.1",
     "node-jsx": "0.12.4",
     "react": "0.12.2",
-    "react-router": "0.11.6",
-    "superagent": "0.21.0"
+    "serialize-javascript": "1.0.0",
+    "superagent": "0.21.0",
+    "webpack": "1.5.3"
   },
   "devDependencies": {
-    "jsx-loader": "0.12.2",
-    "webpack": "1.5.3",
-    "webpack-dev-middleware": "1.0.11"
+    "nodemon": "1.3.2"
   }
 }

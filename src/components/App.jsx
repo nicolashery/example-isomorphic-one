@@ -1,11 +1,10 @@
 var React = require('react');
-var Router = require('react-router');
-var RouteHandler = Router.RouteHandler;
+var ContactList = require('./ContactList.jsx');
 
 var App = React.createClass({
   render: function() {
     return (
-      <RouteHandler {...this.props}/>
+      <ContactList context={this.props.context} />
     );
   }
 });
