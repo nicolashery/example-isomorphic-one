@@ -1,13 +1,19 @@
 var React = require('react');
 var map = require('lodash-node/modern/collections/map');
-var ContactStore = require('../stores/ContactStore');
+var NavLink = require("flux-router-component").NavLink;
 var StoreMixin = require('fluxible').StoreMixin;
+var ContactStore = require('../stores/ContactStore');
 
 var ContactList = React.createClass({
+  propTypes: {
+    context: React.PropTypes.object.isRequired
+  },
+
   mixins: [StoreMixin],
+  
   statics: {
     storeListeners: {
-      handleStoreChange: [ContactStore]
+      _onChange: [ContactStore]
     }
   },
 
@@ -21,7 +27,7 @@ var ContactList = React.createClass({
     };
   },
 
-  handleStoreChange: function() {
+  _onChange: function() {
     this.setState(this.getStateFromStores());
   },
 
@@ -35,11 +41,13 @@ var ContactList = React.createClass({
   },
 
   renderContacts: function() {
+    var context = this.props.context;
     var contacts = this.state.contacts;
     return map(contacts, function(contact) {
+      var path = context.makePath('contact', {id: contact.id});
       return (
         <li key={contact.id}>
-          {contact.name}
+          <NavLink context={context} href={path}>{contact.name}</NavLink>
         </li>
       );
     });

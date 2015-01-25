@@ -1,29 +1,52 @@
 var React = require('react');
-var api = require('../api');
+var StoreMixin = require('fluxible').StoreMixin;
+var NavLink = require("flux-router-component").NavLink;
+var ContactStore = require('../stores/ContactStore');
 
 var ContactDetails = React.createClass({
-  statics: {
-    fetchData: function(params, cb) { api.getContact(params.id, cb); }
+  propTypes: {
+    context: React.PropTypes.object.isRequired,
+    contactId: React.PropTypes.string.isRequired
   },
 
-  getContact: function() {
-    if (!(this.props && this.props.data && this.props.data.contact)) {
-      return null;
+  mixins: [StoreMixin],
+  
+  statics: {
+    storeListeners: {
+      _onChange: [ContactStore]
     }
-    return this.props.data.contact;
+  },
+
+  getInitialState: function() {
+    return this.getStateFromStores();
+  },
+
+  getStateFromStores: function () {
+    return {
+      contact: this.getStore(ContactStore).getContact(this.props.contactId),
+    };
+  },
+
+  _onChange: function() {
+    this.setState(this.getStateFromStores());
   },
 
   render: function() {
     return (
       <div>
         <h1>Contact details</h1>
+        <p>
+          <NavLink context={this.props.context} routeName="contacts">
+            Back to contacts
+          </NavLink>
+        </p>
         {this.renderContact()}
       </div>
     );
   },
 
   renderContact: function() {
-    var contact = this.getContact();
+    var contact = this.state.contact;
     if (!contact) {
       return null;
     }

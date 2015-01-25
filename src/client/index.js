@@ -5,10 +5,10 @@ var app = require('../app');
 var dehydratedState = window.App; // Sent from the server
 
 window.React = React; // For chrome dev tool support
-debug.enable('app:*');
+debug.enable('*');
 
 bootstrapDebug('Rehydrating app');
-app.rehydrate(dehydratedState, function (err, context) {
+app.rehydrate(dehydratedState, function(err, context) {
   if (err) {
       throw err;
   }

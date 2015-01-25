@@ -6,14 +6,14 @@ var ContactStore = createStore({
   storeName: 'ContactStore',
 
   handlers: {
-    'LOAD_CONTACTS_COMPLETED': 'contactsLoaded'
+    'LOAD_CONTACTS_SUCCESS': 'loadContacts'
   },
 
   initialize: function() {
     this.contactsById = {};
   },
 
-  contactsLoaded: function(contacts) {
+  loadContacts: function(contacts) {
     this.contactsById = reduce(contacts, function(result, contact) {
       result[contact.id] = contact;
       return result;
@@ -23,6 +23,10 @@ var ContactStore = createStore({
 
   getContacts: function() {
     return values(this.contactsById);
+  },
+
+  getContact: function(id) {
+    return this.contactsById[id];
   },
 
   dehydrate: function() {
