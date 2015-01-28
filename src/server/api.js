@@ -18,8 +18,8 @@ api.get('/contacts', function(req, res) {
 });
 
 api.post('/contacts', function(req, res) {
-  contact = Immutable.fromJS(req.body);
-  var contact = db.addContact(contact);
+  var contact = Immutable.fromJS(req.body);
+  contact = db.addContact(contact);
   res.status(201).json(contact);
 });
 
@@ -50,6 +50,25 @@ api.delete('/contacts/:id', function(req, res) {
     return res.status(404).json(contactNotFoundResponse());
   }
   return res.sendStatus(200);
+});
+
+api.get('/contacts/:id/messages', function(req, res) {
+  var contactId = req.params.id;
+  var messages = db.getMessagesForContact(contactId);
+  if (!messages) {
+    return res.status(404).json(contactNotFoundResponse());
+  }
+  return res.json(messages);
+});
+
+api.post('/contacts/:id/messages', function(req, res) {
+  var contactId = req.params.id;
+  var message = Immutable.fromJS(req.body);
+  message = db.addMessageForContact(contactId, message);
+  if (!message) {
+    return res.status(404).json(contactNotFoundResponse());
+  }
+  return res.json(message);
 });
 
 api.all('*', function(req, res) {
