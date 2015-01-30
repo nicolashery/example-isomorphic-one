@@ -2,11 +2,12 @@ var React = require('react');
 var StoreMixin = require('fluxible').StoreMixin;
 var NavLink = require("flux-router-component").NavLink;
 var ContactStore = require('../stores/ContactStore');
+var loadContacts = require('../actions/loadContacts');
 
 var ContactDetails = React.createClass({
   propTypes: {
     context: React.PropTypes.object.isRequired,
-    contactId: React.PropTypes.string.isRequired
+    params: React.PropTypes.object.isRequired
   },
 
   mixins: [StoreMixin],
@@ -14,6 +15,9 @@ var ContactDetails = React.createClass({
   statics: {
     storeListeners: {
       _onChange: [ContactStore]
+    },
+    fetchData: function(context, route, done) {
+      context.executeAction(loadContacts, {}, done);
     }
   },
 
@@ -23,12 +27,19 @@ var ContactDetails = React.createClass({
 
   getStateFromStores: function () {
     return {
-      contact: this.getStore(ContactStore).getContact(this.props.contactId),
+      contact: this.getStore(ContactStore).getContact(this.props.params.id)
     };
   },
 
   _onChange: function() {
     this.setState(this.getStateFromStores());
+  },
+
+  componentDidMount: function() {
+    if (!this.props.context.isRendered()) {
+      return;
+    }
+    ContactDetails.fetchData(this.props.context);
   },
 
   render: function() {
@@ -38,6 +49,11 @@ var ContactDetails = React.createClass({
         <p>
           <NavLink context={this.props.context} routeName="contacts">
             Back to contacts
+          </NavLink>
+          {' - '}
+          <NavLink context={this.props.context} routeName="contact-messages"
+            navParams={{id: this.props.params.id}}>
+            Contact messages
           </NavLink>
         </p>
         {this.renderContact()}

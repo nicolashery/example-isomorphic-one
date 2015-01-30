@@ -10,7 +10,27 @@ app.plug(routrPlugin({
   routes: require('./routes')
 }));
 
-app.registerStore(require('./stores/AppStore'));
+app.plug((function () {
+  var rendered = false;
+  return {
+    name: 'RenderedPlugin',
+    plugContext: function() {
+      return {
+        plugComponentContext: function(componentContext) {
+          componentContext.isRendered = function() {
+            return rendered;
+          };
+        }
+      };
+    },
+    renderDone: function() {
+      rendered = true;
+    }
+  };
+}()));
+
+app.registerStore(require('./stores/RouteStore'));
 app.registerStore(require('./stores/ContactStore'));
+app.registerStore(require('./stores/MessageStore'));
 
 module.exports = app;

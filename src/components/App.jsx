@@ -1,7 +1,7 @@
 var React = require('react');
 var RouterMixin = require('flux-router-component').RouterMixin;
 var StoreMixin = require('fluxible').StoreMixin;
-var AppStore = require('../stores/AppStore');
+var RouteStore = require('../stores/RouteStore');
 var MainView = require('./MainView.jsx');
 
 var App = React.createClass({
@@ -9,7 +9,7 @@ var App = React.createClass({
 
   statics: {
     storeListeners: {
-      _onChange: [AppStore]
+      _onChange: [RouteStore]
     }
   },
 
@@ -19,7 +19,7 @@ var App = React.createClass({
 
   getStateFromStores: function () {
     return {
-      route: this.getStore(AppStore).getRoute(),
+      route: this.getStore(RouteStore).getRoute(),
     };
   },
 
@@ -30,10 +30,7 @@ var App = React.createClass({
   render: function() {
     return (
       <div>
-        <MainView
-          context={this.props.context}
-          page={this.state.route.config.page}
-          params={this.state.route.params} />
+        <MainView context={this.props.context} />
       </div>
     );
   }

@@ -9,8 +9,6 @@ var debug = require('debug')('app:server');
 var app = require('../app');
 var api = require('./api');
 var HtmlComponent = React.createFactory(require('./Html.jsx'));
-var loadData = require('../actions/loadData');
-var AppStore = require('../stores/AppStore');
 
 var server = express();
 
@@ -36,30 +34,21 @@ server.use(function(req, res, next) {
         return;
       }
 
-      //console.log(context.getActionContext().getStore(AppStore).getRoute());
+      debug('Exposing context state');
+      var exposed = 'window.App=' + serialize(app.dehydrate(context)) + ';';
 
-      debug('Executing loadData');
-      context.getActionContext().executeAction(loadData, {}, function(err) {
-        if (err) {
-          return next(err);
-        }
+      debug('Rendering application component into html');
+      var AppComponent = app.getAppComponent();
+      var html = React.renderToStaticMarkup(HtmlComponent({
+        state: exposed,
+        markup: React.renderToString(AppComponent({
+          context: context.getComponentContext()
+        }))
+      }));
 
-        debug('Exposing context state');
-        var exposed = 'window.App=' + serialize(app.dehydrate(context)) + ';';
-
-        debug('Rendering application component into html');
-        var AppComponent = app.getAppComponent();
-        var html = React.renderToStaticMarkup(HtmlComponent({
-          state: exposed,
-          markup: React.renderToString(AppComponent({
-            context: context.getComponentContext()
-          }))
-        }));
-
-        debug('Sending markup');
-        res.write(html);
-        res.end();
-      });
+      debug('Sending markup');
+      res.write(html);
+      res.end();
     });
 });
 

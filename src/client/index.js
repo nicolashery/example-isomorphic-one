@@ -19,6 +19,7 @@ app.rehydrate(dehydratedState, function(err, context) {
   React.render(app.getAppComponent()({
     context: context.getComponentContext()
   }), mountNode, function () {
+    app.getPlugin('RenderedPlugin').renderDone();
     bootstrapDebug('React rendered');
   });
 });

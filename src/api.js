@@ -29,4 +29,16 @@ api.getContact = function(id, cb) {
     });
 };
 
+api.getMessages = function(contactId, cb) {
+  superagent
+    .get(host + '/contacts/' + contactId + '/messages')
+    .accept('json')
+    .end(function(err, res) {
+      if (err) {
+        debug('error', err);
+      }
+      cb(err, res && res.body);
+    });
+};
+
 module.exports = api;

@@ -1,7 +1,8 @@
+var React = require('react');
 var createStore = require('fluxible/utils/createStore');
 
-var AppStore = createStore({
-  storeName: 'AppStore',
+var RouteStore = createStore({
+  storeName: 'RouteStore',
 
   handlers: {
     'CHANGE_ROUTE_SUCCESS': 'changeRoute'
@@ -27,6 +28,14 @@ var AppStore = createStore({
     return this.route && this.route.config && this.route.config.page;
   },
 
+  getView: function(name) {
+    return (this.route.config.views || {})[name];
+  },
+
+  getParams: function() {
+    return this.route.params;
+  },
+
   dehydrate: function() {
     return {
       route: this.route
@@ -38,4 +47,4 @@ var AppStore = createStore({
   }
 });
 
-module.exports = AppStore;
+module.exports = RouteStore;
