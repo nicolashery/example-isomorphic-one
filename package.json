@@ -13,7 +13,6 @@
     "debug": "2.1.1",
     "express": "4.11.1",
     "fluxible": "0.1.5",
-    "fluxible-plugin-routr": "0.3.0",
     "immutable": "3.6.2",
     "jsx-loader": "0.12.2",
     "lodash-node": "2.4.1",

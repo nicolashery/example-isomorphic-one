@@ -60,7 +60,7 @@ api.get('/contacts/:id/messages', function(req, res) {
   // return res.json(messages);
   setTimeout(function() {
     res.json(messages);
-  }, 2000);
+  }, 1000);
 });
 
 api.post('/contacts/:id/messages', function(req, res) {
