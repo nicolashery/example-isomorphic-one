@@ -3,6 +3,7 @@ var filter = require('lodash-node/modern/collections/filter');
 var reduce = require('lodash-node/modern/collections/reduce');
 
 function fetchData(context, routerState, cb) {
+  cb = cb || function noop() {};
   var fetchDataRoutes = filter(routerState.routes, function(route) {
     return route.handler.fetchData;
   });

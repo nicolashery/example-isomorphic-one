@@ -36,8 +36,10 @@ app.rehydrate(dehydratedState, function(err, context) {
       return;
     }
 
-    fetchData(context, routerState, function(err) {
-      render(context, Handler);
-    });
+    // On the client, we render the route change immediately
+    // and fetch data in the background
+    // (stores will update and trigger a re-render with new data)
+    render(context, Handler);
+    fetchData(context, routerState);
   });
 });

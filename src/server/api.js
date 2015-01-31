@@ -57,7 +57,10 @@ api.get('/contacts/:id/messages', function(req, res) {
   if (!messages) {
     return res.status(404).json(contactNotFoundResponse());
   }
-  return res.json(messages);
+  // return res.json(messages);
+  setTimeout(function() {
+    res.json(messages);
+  }, 2000);
 });
 
 api.post('/contacts/:id/messages', function(req, res) {
