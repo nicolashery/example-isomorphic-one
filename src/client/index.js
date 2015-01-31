@@ -11,20 +11,33 @@ debug.enable('*');
 var mountNode = document.getElementById('app');
 var dehydratedState = window.App; // Sent from the server
 
+function render(context, Handler) {
+  React.render(
+    React.createElement(Handler, {context: context.getComponentContext()}),
+    mountNode
+  );
+}
+
 bootstrapDebug('Rehydrating app');
 app.rehydrate(dehydratedState, function(err, context) {
   if (err) {
       throw err;
   }
+  
   window.context = context; // For debugging
-
+  var firstRender = true;
   bootstrapDebug('Starting router');
   Router.run(routes, Router.HistoryLocation, function(Handler, routerState) {
+    // If first render, we already have all the data rehydrated so skip fetch
+    if (firstRender) {
+      bootstrapDebug('First render, skipping data fetch');
+      firstRender = false;
+      render(context, Handler);
+      return;
+    }
+
     fetchData(context, routerState, function(err) {
-      React.render(
-        React.createElement(Handler, {context: context.getComponentContext()}),
-        mountNode
-      );
+      render(context, Handler);
     });
   });
 });
