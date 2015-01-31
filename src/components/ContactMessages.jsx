@@ -1,8 +1,9 @@
 var React = require('react');
 var concurrent = require('contra').concurrent;
 var map = require('lodash-node/modern/collections/map');
+var Router = require('react-router');
+var Link = Router.Link;
 var StoreMixin = require('fluxible').StoreMixin;
-var NavLink = require("flux-router-component").NavLink;
 var ContactStore = require('../stores/ContactStore');
 var MessageStore = require('../stores/MessageStore');
 var loadContacts = require('../actions/loadContacts');
@@ -10,22 +11,20 @@ var loadMessages = require('../actions/loadMessages');
 
 var ContactMessages = React.createClass({
   propTypes: {
-    context: React.PropTypes.object.isRequired,
-    params: React.PropTypes.object.isRequired
+    context: React.PropTypes.object.isRequired
   },
 
-  mixins: [StoreMixin],
+  mixins: [StoreMixin, Router.State],
   
   statics: {
     storeListeners: {
       _onChange: [ContactStore, MessageStore]
     },
-    fetchData: function(context, route, done) {
-      done = done || function() {};
+    fetchData: function(context, params, query, done) {
       concurrent([
-        context.executeAction.bind(null, loadContacts, {}),
-        context.executeAction.bind(null, loadMessages, {contactId: route.params.id})
-      ], done);
+        context.executeAction.bind(context, loadContacts, {}),
+        context.executeAction.bind(context, loadMessages, {contactId: params.id})
+      ], done || function() {});
     }
   },
 
@@ -35,8 +34,8 @@ var ContactMessages = React.createClass({
 
   getStateFromStores: function () {
     return {
-      contact: this.getStore(ContactStore).getContact(this.props.params.id),
-      messages: this.getStore(MessageStore).getMessages(this.props.params.id)
+      contact: this.getStore(ContactStore).getContact(this.getContactId()),
+      messages: this.getStore(MessageStore).getMessages(this.getContactId())
     };
   },
 
@@ -44,11 +43,8 @@ var ContactMessages = React.createClass({
     this.setState(this.getStateFromStores());
   },
 
-  componentDidMount: function() {
-    if (!this.props.context.isRendered()) {
-      return;
-    }
-    ContactMessages.fetchData(this.props.context, {params: this.props.params});
+  getContactId: function() {
+    return this.getParams().id;
   },
 
   render: function() {
@@ -56,14 +52,13 @@ var ContactMessages = React.createClass({
       <div>
         <h1>Contact messages</h1>
         <p>
-          <NavLink context={this.props.context} routeName="contacts">
+          <Link to="contacts">
             Back to contacts
-          </NavLink>
+          </Link>
           {' - '}
-          <NavLink context={this.props.context} routeName="contact"
-            navParams={{id: this.props.params.id}}>
+          <Link to="contact-details" params={{id: this.getContactId()}}>
             Contact details
-          </NavLink>
+          </Link>
         </p>
         {this.renderMessages()}
       </div>

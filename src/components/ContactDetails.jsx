@@ -1,22 +1,22 @@
 var React = require('react');
 var StoreMixin = require('fluxible').StoreMixin;
-var NavLink = require("flux-router-component").NavLink;
+var Router = require('react-router');
+var Link = Router.Link;
 var ContactStore = require('../stores/ContactStore');
 var loadContacts = require('../actions/loadContacts');
 
 var ContactDetails = React.createClass({
   propTypes: {
-    context: React.PropTypes.object.isRequired,
-    params: React.PropTypes.object.isRequired
+    context: React.PropTypes.object.isRequired
   },
 
-  mixins: [StoreMixin],
+  mixins: [StoreMixin, Router.State],
   
   statics: {
     storeListeners: {
       _onChange: [ContactStore]
     },
-    fetchData: function(context, route, done) {
+    fetchData: function(context, params, query, done) {
       context.executeAction(loadContacts, {}, done);
     }
   },
@@ -27,7 +27,7 @@ var ContactDetails = React.createClass({
 
   getStateFromStores: function () {
     return {
-      contact: this.getStore(ContactStore).getContact(this.props.params.id)
+      contact: this.getStore(ContactStore).getContact(this.getContactId())
     };
   },
 
@@ -35,11 +35,8 @@ var ContactDetails = React.createClass({
     this.setState(this.getStateFromStores());
   },
 
-  componentDidMount: function() {
-    if (!this.props.context.isRendered()) {
-      return;
-    }
-    ContactDetails.fetchData(this.props.context);
+  getContactId: function() {
+    return this.getParams().id;
   },
 
   render: function() {
@@ -47,14 +44,13 @@ var ContactDetails = React.createClass({
       <div>
         <h1>Contact details</h1>
         <p>
-          <NavLink context={this.props.context} routeName="contacts">
+          <Link to="contacts">
             Back to contacts
-          </NavLink>
+          </Link>
           {' - '}
-          <NavLink context={this.props.context} routeName="contact-messages"
-            navParams={{id: this.props.params.id}}>
+          <Link to="contact-messages" params={{id: this.getContactId()}}>
             Contact messages
-          </NavLink>
+          </Link>
         </p>
         {this.renderContact()}
       </div>

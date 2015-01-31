@@ -1,6 +1,7 @@
 var React = require('react');
 var map = require('lodash-node/modern/collections/map');
-var NavLink = require("flux-router-component").NavLink;
+var Router = require('react-router');
+var Link = Router.Link;
 var StoreMixin = require('fluxible').StoreMixin;
 var ContactStore = require('../stores/ContactStore');
 var loadContacts = require('../actions/loadContacts');
@@ -16,7 +17,7 @@ var ContactList = React.createClass({
     storeListeners: {
       _onChange: [ContactStore]
     },
-    fetchData: function(context, route, done) {
+    fetchData: function(context, params, query, done) {
       context.executeAction(loadContacts, {}, done);
     }
   },
@@ -35,13 +36,6 @@ var ContactList = React.createClass({
     this.setState(this.getStateFromStores());
   },
 
-  componentDidMount: function() {
-    if (!this.props.context.isRendered()) {
-      return;
-    }
-    ContactList.fetchData(this.props.context);
-  },
-
   render: function() {
     return (
       <div>
@@ -52,13 +46,13 @@ var ContactList = React.createClass({
   },
 
   renderContacts: function() {
-    var context = this.props.context;
     var contacts = this.state.contacts;
     return map(contacts, function(contact) {
-      var path = context.makePath('contact', {id: contact.id});
       return (
         <li key={contact.id}>
-          <NavLink context={context} href={path}>{contact.name}</NavLink>
+          <Link to="contact-details" params={{id: contact.id}}>
+            {contact.name}
+          </Link>
         </li>
       );
     });

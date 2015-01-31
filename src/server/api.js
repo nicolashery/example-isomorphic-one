@@ -25,7 +25,6 @@ api.post('/contacts', function(req, res) {
 
 api.get('/contacts/:id', function(req, res) {
   var id = req.params.id;
-  var updates = Immutable.fromJS(req.body);
   var contact = db.getContact(id);
   if (!contact) {
     return res.status(404).json(contactNotFoundResponse());

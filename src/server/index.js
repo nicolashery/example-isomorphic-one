@@ -3,12 +3,14 @@ var path = require('path');
 var express = require('express');
 var bodyParser = require('body-parser');
 var serialize = require('serialize-javascript');
-var navigateAction = require('flux-router-component').navigateAction;
 var React = require('react');
+var Router = require('react-router');
+var routes = require('../routes.jsx');
 var debug = require('debug')('app:server');
 var app = require('../app');
 var api = require('./api');
-var HtmlComponent = React.createFactory(require('./Html.jsx'));
+var HtmlComponent = require('./Html.jsx');
+var fetchData = require('../utils/fetchData');
 
 var server = express();
 
@@ -17,39 +19,58 @@ server.use('/api', api);
 server.use('/public',
   express.static(path.join(__dirname, '..', '..', 'build')));
 
-server.use(function(req, res, next) {
-    var context = app.createContext();
+var renderApp = function(context, location, cb) {
+  var router = Router.create({
+    routes: routes,
+    location: location,
+    onAbort: function(redirect) {
+      cb({redirect: redirect});
+    },
+    onError: function(err) {
+      debug('Routing Error', err);
+    }
+  });
 
-    debug('Executing navigate action', req.url);
-    context.getActionContext().executeAction(navigateAction, {
-        url: req.url
-    }, function (err) {
+  router.run(function(Handler, routerState) {
+    if (routerState.routes[0].name === 'not-found') {
+      var html = React.renderToStaticMarkup(React.createElement(Handler));
+      cb({notFound: true}, html);
+      return;
+    }
+
+    fetchData(context, routerState, function(err) {
       if (err) {
-        if (err.status && err.status === 404) {
-          next();
-        }
-        else {
-          next(err);
-        }
-        return;
+        return cb(err);
       }
 
-      debug('Exposing context state');
-      var exposed = 'window.App=' + serialize(app.dehydrate(context)) + ';';
-
-      debug('Rendering application component into html');
-      var AppComponent = app.getAppComponent();
-      var html = React.renderToStaticMarkup(HtmlComponent({
-        state: exposed,
-        markup: React.renderToString(AppComponent({
+      var contextState = 'window.App=' + serialize(app.dehydrate(context)) + ';';
+      var html = React.renderToStaticMarkup(React.createElement(HtmlComponent, {
+        state: contextState,
+        markup: React.renderToString(React.createElement(Handler, {
           context: context.getComponentContext()
         }))
       }));
-
-      debug('Sending markup');
-      res.write(html);
-      res.end();
+      cb(null, html);
     });
+  });
+};
+
+server.use(function(req, res, next) {
+  var context = app.createContext();
+
+  renderApp(context, req.url, function(err, html) {
+    if (err && err.notFound) {
+      return res.status(404).send(html);
+    }
+    if (err && err.redirect) {
+      return res.redirect(303, err.redirect.to);
+    }
+    if (err) {
+      return next(err);
+    }
+
+    res.send(html);
+  });
 });
 
 var port = process.env.PORT || 3000;

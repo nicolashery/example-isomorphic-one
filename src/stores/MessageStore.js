@@ -1,6 +1,4 @@
 var createStore = require('fluxible/utils/createStore');
-var reduce = require('lodash-node/modern/collections/reduce');
-var values = require('lodash-node/modern/objects/values');
 
 var MessageStore = createStore({
   storeName: 'MessageStore',
