@@ -4,6 +4,46 @@ var db = require('./db');
 
 var api = express.Router();
 
+api.post('/signin', function(req, res) {
+  var credentials = Immutable.fromJS(req.body);
+  if (credentials.get('username') === 'joe@example.com' &&
+      credentials.get('password') === 'password1') {
+    var token = db.createSession();
+    return res.json({token: token});
+  }
+  else {
+    return res.status(401).json({
+      error: {
+        name: 'BadCredentials',
+        message: 'Wrong username or password'
+      }
+    });
+  }
+});
+
+api.post('/signout', function(req, res) {
+  var token = req.header('Authorization');
+  if (token) {
+    db.revokeSession(token);
+  }
+  return res.sendStatus(200);
+});
+
+function validateTokenMiddleware(req, res, next) {
+  var token = req.header('Authorization');
+  if (!(token && db.checkSession(token))) {
+    return res.status(401).json({
+      error: {
+        name: 'InvalidToken',
+        message: 'Must provide valid auth token in Authorization header'
+      }
+    });
+  }
+  next();
+}
+
+api.use(validateTokenMiddleware);
+
 function contactNotFoundResponse() {
   return {
     error: {

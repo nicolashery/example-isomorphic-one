@@ -4,8 +4,27 @@ var makeId = require('./makeId');
 var db = {};
 
 db._state = Immutable.fromJS({
+  sessions: {},
   contacts: {}
 });
+
+db.createSession = function() {
+  var token = makeId();
+  this._state = this._state.setIn(['sessions', token], true);
+  return token;
+};
+
+db.checkSession = function(token) {
+  return this._state.getIn(['sessions', token], false);
+};
+
+db.revokeSession = function(token) {
+  if (!this._state.getIn(['sessions', token])) {
+    return null;
+  }
+  this._state = this._state.removeIn(['sessions', token]);
+  return true;
+};
 
 db._contactResult = function(contact) {
   return contact.remove('messages');
