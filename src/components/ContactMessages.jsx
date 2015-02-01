@@ -3,6 +3,7 @@ var concurrent = require('contra').concurrent;
 var map = require('lodash-node/modern/collections/map');
 var Router = require('react-router');
 var Link = Router.Link;
+var AuthMixin = require('../utils/AuthMixin');
 var StoreMixin = require('fluxible').StoreMixin;
 var ContactStore = require('../stores/ContactStore');
 var MessageStore = require('../stores/MessageStore');
@@ -14,7 +15,7 @@ var ContactMessages = React.createClass({
     context: React.PropTypes.object.isRequired
   },
 
-  mixins: [StoreMixin, Router.State],
+  mixins: [StoreMixin, Router.State, AuthMixin],
   
   statics: {
     storeListeners: {

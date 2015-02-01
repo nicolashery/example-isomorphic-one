@@ -24,7 +24,10 @@ app.rehydrate(dehydratedState, function(err, context) {
       throw err;
   }
   
-  window.context = context; // For debugging
+  // For debugging
+  // SHAME: also using it for AuthMixin
+  window.context = context;
+
   var firstRender = true;
   bootstrapDebug('Starting router');
   Router.run(routes, Router.HistoryLocation, function(Handler, routerState) {

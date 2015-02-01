@@ -44,6 +44,11 @@ function validateTokenMiddleware(req, res, next) {
 
 api.use(validateTokenMiddleware);
 
+// Check if auth token is a valid session
+api.get('/session', function(req, res) {
+  res.sendStatus(200);
+});
+
 function contactNotFoundResponse() {
   return {
     error: {

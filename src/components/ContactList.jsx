@@ -2,6 +2,7 @@ var React = require('react');
 var map = require('lodash-node/modern/collections/map');
 var Router = require('react-router');
 var Link = Router.Link;
+var AuthMixin = require('../utils/AuthMixin');
 var StoreMixin = require('fluxible').StoreMixin;
 var ContactStore = require('../stores/ContactStore');
 var loadContacts = require('../actions/loadContacts');
@@ -11,7 +12,7 @@ var ContactList = React.createClass({
     context: React.PropTypes.object.isRequired
   },
 
-  mixins: [StoreMixin],
+  mixins: [StoreMixin, AuthMixin],
   
   statics: {
     storeListeners: {

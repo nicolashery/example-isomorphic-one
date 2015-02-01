@@ -2,6 +2,7 @@ require('node-jsx').install({extension: '.jsx'});
 var path = require('path');
 var express = require('express');
 var bodyParser = require('body-parser');
+var cookieParser = require('cookie-parser');
 var serialize = require('serialize-javascript');
 var React = require('react');
 var Router = require('react-router');
@@ -11,10 +12,13 @@ var app = require('../app');
 var api = require('./api');
 var HtmlComponent = require('./Html.jsx');
 var fetchData = require('../utils/fetchData');
+var loadSession = require('../actions/loadSession');
+var AuthStore = require('../stores/AuthStore');
 
 var server = express();
 
 server.use(bodyParser.json());
+server.use(cookieParser());
 server.use('/api', api);
 server.use('/public',
   express.static(path.join(__dirname, '..', '..', 'build')));
@@ -56,20 +60,34 @@ var renderApp = function(context, location, cb) {
 };
 
 server.use(function(req, res, next) {
+  var url = req.url;
   var context = app.createContext();
-
-  renderApp(context, req.url, function(err, html) {
-    if (err && err.notFound) {
-      return res.status(404).send(html);
-    }
-    if (err && err.redirect) {
-      return res.redirect(303, err.redirect.to);
-    }
+  var token = req.cookies.token;
+  context.getActionContext().executeAction(loadSession, {token: token}, function(err) {
     if (err) {
       return next(err);
     }
 
-    res.send(html);
+    token = context.getActionContext().getStore(AuthStore).getToken();
+    // Not great having this auth/redirect logic duplicated here
+    // (see AuthMixin, we can't use it on the server)
+    if (!token && url !== '/about') {
+      url = '/signin';
+    }
+
+    renderApp(context, url, function(err, html) {
+      if (err && err.notFound) {
+        return res.status(404).send(html);
+      }
+      if (err && err.redirect) {
+        return res.redirect(303, err.redirect.to);
+      }
+      if (err) {
+        return next(err);
+      }
+
+      res.send(html);
+    });
   });
 });
 
