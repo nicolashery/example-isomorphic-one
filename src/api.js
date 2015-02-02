@@ -14,6 +14,9 @@ api.signIn = function(username, password, cb) {
       if (err) {
         debug('error', err);
       }
+      if (!res.ok) {
+        err = (res.body && res.body.error) || {status: res.status};
+      }
       cb(err, res && res.body);
     });
 };

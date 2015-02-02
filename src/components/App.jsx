@@ -2,13 +2,14 @@ var React = require('react');
 var Router = require('react-router');
 var Link = Router.Link;
 var RouteHandler = Router.RouteHandler;
+var SignInOrOut = require('./SignInOrOut.jsx');
 
 var App = React.createClass({
   render: function() {
     return (
       <div>
         <p>
-          <Link to="signin">Sign in</Link>
+          <SignInOrOut context={this.props.context} />
           {' - '}
           <Link to="about">About</Link>
           {' - '}
