@@ -13,7 +13,6 @@ var api = require('./api');
 var HtmlComponent = require('./Html.jsx');
 var fetchData = require('../utils/fetchData');
 var loadSession = require('../actions/loadSession');
-var AuthStore = require('../stores/AuthStore');
 
 var server = express();
 
@@ -27,6 +26,7 @@ var renderApp = function(context, location, cb) {
   var router = Router.create({
     routes: routes,
     location: location,
+    transitionContext: context,
     onAbort: function(redirect) {
       cb({redirect: redirect});
     },
@@ -60,22 +60,15 @@ var renderApp = function(context, location, cb) {
 };
 
 server.use(function(req, res, next) {
-  var url = req.url;
   var context = app.createContext();
-  var token = req.cookies.token;
-  context.getActionContext().executeAction(loadSession, {token: token}, function(err) {
+  context.getActionContext().executeAction(loadSession, {
+    token: req.cookies.token
+  }, function(err) {
     if (err) {
       return next(err);
     }
 
-    token = context.getActionContext().getStore(AuthStore).getToken();
-    // Not great having this auth/redirect logic duplicated here
-    // (see AuthMixin, we can't use it on the server)
-    if (!token && url !== '/about') {
-      url = '/signin';
-    }
-
-    renderApp(context, url, function(err, html) {
+    renderApp(context, req.url, function(err, html) {
       if (err && err.notFound) {
         return res.status(404).send(html);
       }

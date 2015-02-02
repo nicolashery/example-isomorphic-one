@@ -25,12 +25,17 @@ app.rehydrate(dehydratedState, function(err, context) {
   }
   
   // For debugging
-  // SHAME: also using it for AuthMixin
   window.context = context;
+
+  var router = Router.create({
+    routes: routes,
+    location: Router.HistoryLocation,
+    transitionContext: context
+  });
 
   var firstRender = true;
   bootstrapDebug('Starting router');
-  Router.run(routes, Router.HistoryLocation, function(Handler, routerState) {
+  router.run(function(Handler, routerState) {
     // If first render, we already have all the data rehydrated so skip fetch
     if (firstRender) {
       bootstrapDebug('First render, skipping data fetch');

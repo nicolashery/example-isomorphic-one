@@ -19,7 +19,7 @@
     "lodash-node": "2.4.1",
     "node-jsx": "0.12.4",
     "react": "0.12.2",
-    "react-router": "0.11.6",
+    "react-router": "bobpace/react-router#9a2a4186d2bacdc7a30cf112dd25926bd06c61da",
     "serialize-javascript": "1.0.0",
     "superagent": "0.21.0",
     "webpack": "1.5.3"
