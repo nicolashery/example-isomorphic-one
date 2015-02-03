@@ -16,7 +16,7 @@ module.exports = function(context, payload, done) {
     debug('Success');
     context.dispatch('SIGN_OUT_SUCCESS');
     // NOTE: possible race condition here
-    // the AuthStore needs to set it's state to "not authenticated"
+    // the AuthStore needs to set its state to "not authenticated"
     // before the transition
     context.getRouter().transitionTo('/signin');
     done();

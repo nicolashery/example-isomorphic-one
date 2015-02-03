@@ -15,6 +15,10 @@ module.exports = function(context, payload, done) {
     }
     debug('Success');
     context.dispatch('SIGN_IN_SUCCESS', auth.token);
+    // NOTE: possible race condition here
+    // the AuthStore needs to set its state to "authenticated"
+    // before the transition
+    context.getRouter().transitionTo('/contacts');
     done();
   });
 };
