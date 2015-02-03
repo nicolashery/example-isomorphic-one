@@ -17,6 +17,9 @@ module.exports = function(context, payload, done) {
     }
     debug('Success');
     context.dispatch('LOAD_SESSION', token);
+    if (!token) {
+      context.clearCookie('token');
+    }
     done();
   });
 };

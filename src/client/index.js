@@ -37,6 +37,10 @@ app.rehydrate(dehydratedState, function(err, context) {
   context.getActionContext().getRouter = function() {
     return router;
   };
+  context.getActionContext().setCookie = function(name, value) {
+    document.cookie = name + '=' + value;
+  };
+  context.getActionContext().clearCookie = function noop() {};
 
   var firstRender = true;
   bootstrapDebug('Starting router');
