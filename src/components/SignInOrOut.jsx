@@ -1,16 +1,12 @@
 var React = require('react');
-var StoreMixin = require('fluxible').StoreMixin;
+var FluxibleMixin = require('fluxible').Mixin;
 var Router = require('react-router');
 var Link = Router.Link;
 var AuthStore = require('../stores/AuthStore');
 var signOut = require('../actions/signOut');
 
 var SignInOrOut = React.createClass({
-  propTypes: {
-    context: React.PropTypes.object.isRequired
-  },
-
-  mixins: [StoreMixin],
+  mixins: [FluxibleMixin],
   
   statics: {
     storeListeners: {
@@ -47,7 +43,7 @@ var SignInOrOut = React.createClass({
 
   handleSignOut: function(e) {
     e.preventDefault();
-    this.props.context.executeAction(signOut, {});
+    this.context.executeAction(signOut, {});
   }
 });
 

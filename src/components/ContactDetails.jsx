@@ -1,5 +1,5 @@
 var React = require('react');
-var StoreMixin = require('fluxible').StoreMixin;
+var FluxibleMixin = require('fluxible').Mixin;
 var Router = require('react-router');
 var Link = Router.Link;
 var AuthMixin = require('../utils/AuthMixin');
@@ -7,11 +7,7 @@ var ContactStore = require('../stores/ContactStore');
 var loadContacts = require('../actions/loadContacts');
 
 var ContactDetails = React.createClass({
-  propTypes: {
-    context: React.PropTypes.object.isRequired
-  },
-
-  mixins: [StoreMixin, Router.State, AuthMixin],
+  mixins: [FluxibleMixin, Router.State, AuthMixin],
   
   statics: {
     storeListeners: {

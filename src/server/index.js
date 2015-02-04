@@ -50,9 +50,9 @@ var renderApp = function(context, location, cb) {
       var contextState = 'window.App=' + serialize(app.dehydrate(context)) + ';';
       var html = React.renderToStaticMarkup(React.createElement(HtmlComponent, {
         state: contextState,
-        markup: React.renderToString(React.createElement(Handler, {
-          context: context.getComponentContext()
-        }))
+        markup: React.withContext(context.getComponentContext(), function() {
+          return React.renderToString(React.createElement(Handler));
+        })
       }));
       cb(null, html);
     });

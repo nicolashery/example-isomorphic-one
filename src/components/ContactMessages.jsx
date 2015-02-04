@@ -4,18 +4,14 @@ var map = require('lodash-node/modern/collections/map');
 var Router = require('react-router');
 var Link = Router.Link;
 var AuthMixin = require('../utils/AuthMixin');
-var StoreMixin = require('fluxible').StoreMixin;
+var FluxibleMixin = require('fluxible').Mixin;
 var ContactStore = require('../stores/ContactStore');
 var MessageStore = require('../stores/MessageStore');
 var loadContacts = require('../actions/loadContacts');
 var loadMessages = require('../actions/loadMessages');
 
 var ContactMessages = React.createClass({
-  propTypes: {
-    context: React.PropTypes.object.isRequired
-  },
-
-  mixins: [StoreMixin, Router.State, AuthMixin],
+  mixins: [FluxibleMixin, Router.State, AuthMixin],
   
   statics: {
     storeListeners: {

@@ -1,14 +1,10 @@
 var React = require('react');
-var StoreMixin = require('fluxible').StoreMixin;
+var FluxibleMixin = require('fluxible').Mixin;
 var AuthStore = require('../stores/AuthStore');
 var signIn = require('../actions/signIn');
 
 var SignIn = React.createClass({
-  propTypes: {
-    context: React.PropTypes.object.isRequired
-  },
-
-  mixins: [StoreMixin],
+  mixins: [FluxibleMixin],
   
   statics: {
     storeListeners: {
@@ -71,7 +67,7 @@ var SignIn = React.createClass({
     e.preventDefault();
     var username = this.refs.username.getDOMNode().value;
     var password = this.refs.password.getDOMNode().value;
-    this.props.context.executeAction(signIn, {
+    this.context.executeAction(signIn, {
       username: username,
       password: password
     });

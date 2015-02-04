@@ -9,13 +9,13 @@ var App = React.createClass({
     return (
       <div>
         <p>
-          <SignInOrOut context={this.props.context} />
+          <SignInOrOut />
           {' - '}
           <Link to="about">About</Link>
           {' - '}
           <Link to="contacts">Contacts</Link>
         </p>
-        <RouteHandler {...this.props} />
+        <RouteHandler />
       </div>
     );
   }

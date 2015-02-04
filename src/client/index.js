@@ -12,10 +12,9 @@ var mountNode = document.getElementById('app');
 var dehydratedState = window.App; // Sent from the server
 
 function render(context, Handler) {
-  React.render(
-    React.createElement(Handler, {context: context.getComponentContext()}),
-    mountNode
-  );
+  React.withContext(context.getComponentContext(), function() {
+    React.render(React.createElement(Handler), mountNode);
+  });
 }
 
 bootstrapDebug('Rehydrating app');
