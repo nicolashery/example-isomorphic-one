@@ -31,11 +31,7 @@ app.rehydrate(dehydratedState, function(err, context) {
     location: Router.HistoryLocation,
     transitionContext: context
   });
-
-  // NOTE: a bit of a hack maybe, should this be handled by a plugin?
-  context.getActionContext().getRouter = function() {
-    return router;
-  };
+  app.getPlugin('RouterPlugin').setRouter(router);
 
   var firstRender = true;
   bootstrapDebug('Starting router');

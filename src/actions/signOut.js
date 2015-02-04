@@ -16,7 +16,7 @@ module.exports = function(context, payload, done) {
     // NOTE: possible race condition here
     // the AuthStore needs to set its state to "not authenticated"
     // before the transition
-    context.getRouter().transitionTo('/signin');
+    context.router.transitionTo('/signin');
     done();
   });
 };
