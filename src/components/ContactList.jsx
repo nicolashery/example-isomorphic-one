@@ -1,5 +1,5 @@
 var React = require('react');
-var map = require('lodash-node/modern/collections/map');
+var map = require('lodash/collection/map');
 var Router = require('react-router');
 var Link = Router.Link;
 var AuthMixin = require('../utils/AuthMixin');

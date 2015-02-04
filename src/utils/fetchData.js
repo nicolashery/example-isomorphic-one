@@ -1,6 +1,6 @@
 var concurrent = require('contra').concurrent;
-var filter = require('lodash-node/modern/collections/filter');
-var reduce = require('lodash-node/modern/collections/reduce');
+var filter = require('lodash/collection/filter');
+var reduce = require('lodash/collection/reduce');
 
 function fetchData(context, routerState, cb) {
   cb = cb || function noop() {};

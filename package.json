@@ -16,7 +16,7 @@
     "fluxible": "0.2.0",
     "immutable": "3.6.2",
     "jsx-loader": "0.12.2",
-    "lodash-node": "2.4.1",
+    "lodash": "3.1.0",
     "node-jsx": "0.12.4",
     "react": "0.12.2",
     "react-router": "bobpace/react-router#9a2a4186d2bacdc7a30cf112dd25926bd06c61da",
