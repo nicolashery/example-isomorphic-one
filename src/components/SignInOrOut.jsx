@@ -9,9 +9,7 @@ var SignInOrOut = React.createClass({
   mixins: [FluxibleMixin],
   
   statics: {
-    storeListeners: {
-      _onChange: [AuthStore]
-    }
+    storeListeners: [AuthStore]
   },
 
   getInitialState: function() {
@@ -25,7 +23,7 @@ var SignInOrOut = React.createClass({
     };
   },
 
-  _onChange: function() {
+  onChange: function() {
     this.setState(this.getStateFromStores());
   },
 

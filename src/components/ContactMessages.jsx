@@ -14,9 +14,8 @@ var ContactMessages = React.createClass({
   mixins: [FluxibleMixin, Router.State, AuthMixin],
   
   statics: {
-    storeListeners: {
-      _onChange: [ContactStore, MessageStore]
-    },
+    storeListeners: [ContactStore, MessageStore],
+
     fetchData: function(context, params, query, done) {
       concurrent([
         context.executeAction.bind(context, loadContacts, {}),
@@ -36,7 +35,7 @@ var ContactMessages = React.createClass({
     };
   },
 
-  _onChange: function() {
+  onChange: function() {
     this.setState(this.getStateFromStores());
   },
 

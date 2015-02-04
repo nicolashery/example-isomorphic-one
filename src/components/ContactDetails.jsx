@@ -10,9 +10,8 @@ var ContactDetails = React.createClass({
   mixins: [FluxibleMixin, Router.State, AuthMixin],
   
   statics: {
-    storeListeners: {
-      _onChange: [ContactStore]
-    },
+    storeListeners: [ContactStore],
+
     fetchData: function(context, params, query, done) {
       context.executeAction(loadContacts, {}, done);
     }
@@ -28,7 +27,7 @@ var ContactDetails = React.createClass({
     };
   },
 
-  _onChange: function() {
+  onChange: function() {
     this.setState(this.getStateFromStores());
   },
 

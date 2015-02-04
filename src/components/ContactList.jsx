@@ -11,9 +11,8 @@ var ContactList = React.createClass({
   mixins: [FluxibleMixin, AuthMixin],
   
   statics: {
-    storeListeners: {
-      _onChange: [ContactStore]
-    },
+    storeListeners: [ContactStore],
+
     fetchData: function(context, params, query, done) {
       context.executeAction(loadContacts, {}, done);
     }
@@ -29,7 +28,7 @@ var ContactList = React.createClass({
     };
   },
 
-  _onChange: function() {
+  onChange: function() {
     this.setState(this.getStateFromStores());
   },
 
