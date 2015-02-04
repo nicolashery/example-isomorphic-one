@@ -1,12 +1,9 @@
 var debug = require('debug')('app:signOut');
-var api = require('../api');
-var AuthStore = require('../stores/AuthStore');
 
 module.exports = function(context, payload, done) {
   debug('Started');
-  var token = context.getStore(AuthStore).getToken();
   context.dispatch('SIGN_OUT_START');
-  api.signOut(token, function(err) {
+  context.api.signOut(function(err) {
     if (err) {
       debug('Failed');
       context.dispatch('SIGN_OUT_FAILURE', err);

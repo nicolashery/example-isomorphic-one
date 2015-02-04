@@ -1,13 +1,17 @@
 var superagent = require('superagent');
-var debug = require('debug')('app:api');
+var debug = require('debug')('app:Api');
 
-var api = {};
+function Api(options) {
+  options = options || {};
+  var noop = function() {};
 
-var host = 'http://localhost:3000/api';
+  this._getHost = options.getHost || noop;
+  this._getToken = options.getToken || noop;
+}
 
-api.signIn = function(username, password, cb) {
+Api.prototype.signIn = function(username, password, cb) {
   superagent
-    .post(host + '/signin')
+    .post(this._getHost() + '/signin')
     .accept('json')
     .send({username: username, password: password})
     .end(function(err, res) {
@@ -21,11 +25,11 @@ api.signIn = function(username, password, cb) {
     });
 };
 
-api.signOut = function(token, cb) {
+Api.prototype.signOut = function(cb) {
   superagent
-    .post(host + '/signout')
+    .post(this._getHost() + '/signout')
     .accept('json')
-    .set('Authorization', token)
+    .set('Authorization', this._getToken())
     .end(function(err, res) {
       if (err) {
         debug('error', err);
@@ -34,25 +38,25 @@ api.signOut = function(token, cb) {
     });
 };
 
-api.getSession = function(token, cb) {
+Api.prototype.getSession = function(token, cb) {
   superagent
-    .get(host + '/session')
+    .get(this._getHost() + '/session')
     .accept('json')
     .set('Authorization', token)
     .end(function(err, res) {
       if (err) {
         debug('error', err);
       }
-      token = res.ok ? token : null;
+      token = res && res.ok ? token : null;
       cb(err, token);
     });
 };
 
-api.getContacts = function(token, cb) {
+Api.prototype.getContacts = function(cb) {
   superagent
-    .get(host + '/contacts')
+    .get(this._getHost() + '/contacts')
     .accept('json')
-    .set('Authorization', token)
+    .set('Authorization', this._getToken())
     .end(function(err, res) {
       if (err) {
         debug('error', err);
@@ -61,11 +65,11 @@ api.getContacts = function(token, cb) {
     });
 };
 
-api.getContact = function(token, id, cb) {
+Api.prototype.getContact = function(id, cb) {
   superagent
-    .get(host + '/contacts/' + id)
+    .get(this._getHost() + '/contacts/' + id)
     .accept('json')
-    .set('Authorization', token)
+    .set('Authorization', this._getToken())
     .end(function(err, res) {
       if (err) {
         debug('error', err);
@@ -74,11 +78,11 @@ api.getContact = function(token, id, cb) {
     });
 };
 
-api.getMessages = function(token, contactId, cb) {
+Api.prototype.getMessages = function(contactId, cb) {
   superagent
-    .get(host + '/contacts/' + contactId + '/messages')
+    .get(this._getHost() + '/contacts/' + contactId + '/messages')
     .accept('json')
-    .set('Authorization', token)
+    .set('Authorization', this._getToken())
     .end(function(err, res) {
       if (err) {
         debug('error', err);
@@ -87,4 +91,4 @@ api.getMessages = function(token, contactId, cb) {
     });
 };
 
-module.exports = api;
+module.exports = Api;

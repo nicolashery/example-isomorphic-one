@@ -14,6 +14,8 @@ var HtmlComponent = require('./Html.jsx');
 var fetchData = require('../utils/fetchData');
 var loadSession = require('../actions/loadSession');
 
+var config = require('../../config');
+
 var server = express();
 
 server.use(bodyParser.json());
@@ -60,7 +62,9 @@ var renderApp = function(context, location, cb) {
 };
 
 server.use(function(req, res, next) {
-  var context = app.createContext();
+  var context = app.createContext({
+    config: config
+  });
   // NOTE: this is a bit of a hack, maybe belongs in a plugin
   context.getActionContext().setCookie = function(name, value) {
     res.cookie(name, value);

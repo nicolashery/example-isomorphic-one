@@ -1,5 +1,4 @@
 var debug = require('debug')('app:loadSession');
-var api = require('../api');
 
 module.exports = function(context, payload, done) {
   debug('Started');
@@ -9,7 +8,7 @@ module.exports = function(context, payload, done) {
     done();
     return;
   }
-  api.getSession(token, function(err, token) {
+  context.api.getSession(token, function(err, token) {
     if (err) {
       debug('Failed');
       done();

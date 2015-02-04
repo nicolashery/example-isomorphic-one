@@ -20,7 +20,7 @@ function render(context, Handler) {
 bootstrapDebug('Rehydrating app');
 app.rehydrate(dehydratedState, function(err, context) {
   if (err) {
-      throw err;
+    throw err;
   }
   
   // For debugging
