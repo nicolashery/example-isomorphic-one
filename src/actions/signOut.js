@@ -12,6 +12,7 @@ module.exports = function(context, payload, done) {
     }
     debug('Success');
     context.dispatch('SIGN_OUT_SUCCESS');
+    context.cookie.clear('token');
     // NOTE: possible race condition here
     // the AuthStore needs to set its state to "not authenticated"
     // before the transition

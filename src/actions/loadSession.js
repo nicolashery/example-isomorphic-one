@@ -2,7 +2,7 @@ var debug = require('debug')('app:loadSession');
 
 module.exports = function(context, payload, done) {
   debug('Started');
-  var token = payload.token;
+  var token = context.cookie.get('token');
   if (!token) {
     context.dispatch('LOAD_SESSION', null);
     done();
@@ -17,7 +17,7 @@ module.exports = function(context, payload, done) {
     debug('Success');
     context.dispatch('LOAD_SESSION', token);
     if (!token) {
-      context.clearCookie('token');
+      context.cookie.clear('token');
     }
     done();
   });

@@ -63,19 +63,12 @@ var renderApp = function(context, location, cb) {
 
 server.use(function(req, res, next) {
   var context = app.createContext({
+    req: req,
+    res: res,
     config: config
   });
-  // NOTE: this is a bit of a hack, maybe belongs in a plugin
-  context.getActionContext().setCookie = function(name, value) {
-    res.cookie(name, value);
-  };
-  context.getActionContext().clearCookie = function(name) {
-    res.clearCookie(name);
-  };
 
-  context.getActionContext().executeAction(loadSession, {
-    token: req.cookies.token
-  }, function(err) {
+  context.getActionContext().executeAction(loadSession, {}, function(err) {
     if (err) {
       return next(err);
     }
