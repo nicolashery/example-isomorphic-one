@@ -1,10 +1,10 @@
 var React = require('react');
 var FluxibleMixin = require('fluxible').Mixin;
+var Navigation = require('react-router').Navigation;
 var NewContactStore = require('../stores/NewContactStore');
-var createContact = require('../actions/createContact');
 
 var NewContact = React.createClass({
-  mixins: [FluxibleMixin],
+  mixins: [FluxibleMixin, Navigation],
 
   statics: {
     storeListeners: [NewContactStore]
@@ -28,9 +28,9 @@ var NewContact = React.createClass({
   render: function() {
     return (
       <div>
-        <form>
+        <form action="/contacts/create" onSubmit={this.handleCreateContact}>
           <p>
-            <input ref="name" placeholder="New contact" />
+            <input ref="name" name="name" placeholder="New contact" />
             {' '}
             {this.renderButton()}
           </p>
@@ -52,7 +52,6 @@ var NewContact = React.createClass({
     return (
       <button
         type="submit"
-        onClick={this.handleCreateContact}
         disabled={disabled}>
         {text}
       </button>
@@ -66,7 +65,7 @@ var NewContact = React.createClass({
       return;
     }
     this.refs.name.getDOMNode().value = '';
-    this.context.executeAction(createContact, {name: name});
+    this.transitionTo('contact-create', {}, {name: name});
   },
 
   renderError: function() {

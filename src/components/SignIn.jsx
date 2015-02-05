@@ -30,9 +30,9 @@ var SignIn = React.createClass({
       <div>
         <h1>Sign in</h1>
         <form>
-          <p><input ref="username" placeholder="username" defaultValue="joe@example.com"/></p>
+          <p><input ref="username" name="username" placeholder="username" defaultValue="joe@example.com"/></p>
           <p>
-            <input ref="password" type="password" placeholder="password"/>
+            <input ref="password" name="password" type="password" placeholder="password"/>
             {' (hint: password1)'}
           </p>
           <p>{this.renderButton()}</p>
