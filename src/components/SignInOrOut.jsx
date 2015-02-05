@@ -7,7 +7,7 @@ var signOut = require('../actions/signOut');
 
 var SignInOrOut = React.createClass({
   mixins: [FluxibleMixin],
-  
+
   statics: {
     storeListeners: [AuthStore]
   },

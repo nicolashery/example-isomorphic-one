@@ -88,7 +88,7 @@ var AuthStore = createStore({
       signInError: this.signInError
     };
   },
-  
+
   rehydrate: function(state) {
     this.token = state.token;
     this.signingIn = state.signingIn;

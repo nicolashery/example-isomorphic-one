@@ -22,7 +22,7 @@ app.rehydrate(dehydratedState, function(err, context) {
   if (err) {
     throw err;
   }
-  
+
   // For debugging
   window.context = context;
 

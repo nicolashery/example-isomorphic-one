@@ -12,7 +12,7 @@ var loadMessages = require('../actions/loadMessages');
 
 var ContactMessages = React.createClass({
   mixins: [FluxibleMixin, Router.State, AuthMixin],
-  
+
   statics: {
     storeListeners: [ContactStore, MessageStore],
 

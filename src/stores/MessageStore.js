@@ -25,7 +25,7 @@ var MessageStore = createStore({
       messagesbyContactId: this.messagesbyContactId
     };
   },
-  
+
   rehydrate: function(state) {
     this.messagesbyContactId = state.messagesbyContactId;
   }

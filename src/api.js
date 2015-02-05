@@ -78,6 +78,20 @@ Api.prototype.getContact = function(id, cb) {
     });
 };
 
+Api.prototype.createContact = function(contact, cb) {
+  superagent
+    .post(this._getHost() + '/contacts')
+    .accept('json')
+    .set('Authorization', this._getToken())
+    .send(contact)
+    .end(function(err, res) {
+      if (err) {
+        debug('error', err);
+      }
+      cb(err, res && res.body);
+    });
+};
+
 Api.prototype.getMessages = function(contactId, cb) {
   superagent
     .get(this._getHost() + '/contacts/' + contactId + '/messages')

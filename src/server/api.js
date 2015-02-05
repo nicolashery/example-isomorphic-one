@@ -11,8 +11,7 @@ api.post('/signin', function(req, res) {
         credentials.get('password') === 'password1') {
       var token = db.createSession();
       return res.json({token: token});
-    }
-    else {
+    } else {
       return res.status(401).json({
         error: {
           name: 'BadCredentials',
@@ -67,9 +66,11 @@ api.get('/contacts', function(req, res) {
 });
 
 api.post('/contacts', function(req, res) {
-  var contact = Immutable.fromJS(req.body);
-  contact = db.addContact(contact);
-  res.status(201).json(contact);
+  setTimeout(function() {
+    var contact = Immutable.fromJS(req.body);
+    contact = db.addContact(contact);
+    res.status(201).json(contact);
+  }, 1000);
 });
 
 api.get('/contacts/:id', function(req, res) {

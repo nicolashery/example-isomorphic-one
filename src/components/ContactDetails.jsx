@@ -8,7 +8,7 @@ var loadContacts = require('../actions/loadContacts');
 
 var ContactDetails = React.createClass({
   mixins: [FluxibleMixin, Router.State, AuthMixin],
-  
+
   statics: {
     storeListeners: [ContactStore],
 

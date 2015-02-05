@@ -5,7 +5,7 @@ var signIn = require('../actions/signIn');
 
 var SignIn = React.createClass({
   mixins: [FluxibleMixin],
-  
+
   statics: {
     storeListeners: [AuthStore]
   },

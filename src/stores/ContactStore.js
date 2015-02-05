@@ -6,7 +6,8 @@ var ContactStore = createStore({
   storeName: 'ContactStore',
 
   handlers: {
-    'LOAD_CONTACTS_SUCCESS': 'loadContacts'
+    'LOAD_CONTACTS_SUCCESS': 'loadContacts',
+    'CREATE_CONTACT_SUCCESS': 'createContact'
   },
 
   initialize: function() {
@@ -18,6 +19,11 @@ var ContactStore = createStore({
       result[contact.id] = contact;
       return result;
     }, {});
+    this.emitChange();
+  },
+
+  createContact: function(contact) {
+    this.contactsById[contact.id] = contact;
     this.emitChange();
   },
 
@@ -34,7 +40,7 @@ var ContactStore = createStore({
       contactsById: this.contactsById
     };
   },
-  
+
   rehydrate: function(state) {
     this.contactsById = state.contactsById;
   }

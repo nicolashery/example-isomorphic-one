@@ -6,10 +6,11 @@ var AuthMixin = require('../utils/AuthMixin');
 var FluxibleMixin = require('fluxible').Mixin;
 var ContactStore = require('../stores/ContactStore');
 var loadContacts = require('../actions/loadContacts');
+var NewContact = require('./NewContact.jsx');
 
 var ContactList = React.createClass({
   mixins: [FluxibleMixin, AuthMixin],
-  
+
   statics: {
     storeListeners: [ContactStore],
 
@@ -37,6 +38,7 @@ var ContactList = React.createClass({
       <div>
         <h1>Contact list</h1>
         <ul>{this.renderContacts()}</ul>
+        <NewContact />
       </div>
     );
   },
