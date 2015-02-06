@@ -1,7 +1,7 @@
 var createStore = require('fluxible/utils/createStore');
 
-var NewContactStore = createStore({
-  storeName: 'NewContactStore',
+var CreateContactStore = createStore({
+  storeName: 'CreateContactStore',
 
   handlers: {
     'CREATE_CONTACT_START': 'start',
@@ -53,4 +53,4 @@ var NewContactStore = createStore({
   }
 });
 
-module.exports = NewContactStore;
+module.exports = CreateContactStore;

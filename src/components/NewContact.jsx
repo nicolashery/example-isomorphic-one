@@ -1,13 +1,13 @@
 var React = require('react');
 var FluxibleMixin = require('fluxible').Mixin;
 var Navigation = require('react-router').Navigation;
-var NewContactStore = require('../stores/NewContactStore');
+var CreateContactStore = require('../stores/CreateContactStore');
 
 var NewContact = React.createClass({
   mixins: [FluxibleMixin, Navigation],
 
   statics: {
-    storeListeners: [NewContactStore]
+    storeListeners: [CreateContactStore]
   },
 
   getInitialState: function() {
@@ -16,8 +16,8 @@ var NewContact = React.createClass({
 
   getStateFromStores: function () {
     return {
-      isCreatingContact: this.getStore(NewContactStore).isCreatingContact(),
-      error: this.getStore(NewContactStore).getCreateContactError()
+      isCreatingContact: this.getStore(CreateContactStore).isCreatingContact(),
+      error: this.getStore(CreateContactStore).getCreateContactError()
     };
   },
 
