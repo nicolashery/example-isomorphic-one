@@ -1,6 +1,16 @@
 var React = require('react');
 
 var Loading = React.createClass({
+  propTypes: {
+    timeout: React.PropTypes.number
+  },
+
+  getDefaultProps: function() {
+    return {
+      timeout: 250
+    };
+  },
+
   getInitialState: function() {
     return {loading: false};
   },
@@ -9,7 +19,7 @@ var Loading = React.createClass({
     var self = this;
     this.timeout = setTimeout(function() {
       self.setState({loading: true});
-    }, 1200);
+    }, this.props.timeout);
   },
 
   componentWillUnmount: function() {
