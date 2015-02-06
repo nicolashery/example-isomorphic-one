@@ -7,14 +7,16 @@ var AuthMixin = require('../utils/AuthMixin');
 var FluxibleMixin = require('fluxible').Mixin;
 var ContactStore = require('../stores/ContactStore');
 var MessageStore = require('../stores/MessageStore');
+var LoadMessagesStore = require('../stores/LoadMessagesStore');
 var loadContacts = require('../actions/loadContacts');
 var loadMessages = require('../actions/loadMessages');
+var Loading = require('./Loading.jsx');
 
 var ContactMessages = React.createClass({
   mixins: [FluxibleMixin, Router.State, AuthMixin],
 
   statics: {
-    storeListeners: [ContactStore, MessageStore],
+    storeListeners: [ContactStore, MessageStore, LoadMessagesStore],
 
     fetchData: function(context, params, query, done) {
       concurrent([
@@ -31,7 +33,8 @@ var ContactMessages = React.createClass({
   getStateFromStores: function () {
     return {
       contact: this.getStore(ContactStore).getContact(this.getContactId()),
-      messages: this.getStore(MessageStore).getMessages(this.getContactId())
+      messages: this.getStore(MessageStore).getMessages(this.getContactId()),
+      loading: this.getStore(LoadMessagesStore).isLoadingMessages()
     };
   },
 
@@ -56,9 +59,18 @@ var ContactMessages = React.createClass({
             Contact details
           </Link>
         </p>
+        {this.renderLoading()}
         {this.renderMessages()}
       </div>
     );
+  },
+
+  renderLoading: function() {
+    if (!this.state.loading) {
+      return null;
+    }
+
+    return <Loading />;
   },
 
   renderMessages: function() {
