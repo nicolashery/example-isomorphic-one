@@ -41,7 +41,7 @@ var SignInOrOut = React.createClass({
 
   handleSignOut: function(e) {
     e.preventDefault();
-    this.context.executeAction(signOut, {});
+    this.executeAction(signOut, {});
   }
 });
 

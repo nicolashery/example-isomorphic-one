@@ -65,7 +65,7 @@ var SignIn = React.createClass({
     e.preventDefault();
     var username = this.refs.username.getDOMNode().value;
     var password = this.refs.password.getDOMNode().value;
-    this.context.executeAction(signIn, {
+    this.executeAction(signIn, {
       username: username,
       password: password
     });
