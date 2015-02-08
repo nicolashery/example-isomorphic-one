@@ -1,12 +1,12 @@
 var createStore = require('fluxible/utils/createStore');
 
-var LoadMessagesStore = createStore({
-  storeName: 'LoadMessagesStore',
+var FetchMessagesStore = createStore({
+  storeName: 'FetchMessagesStore',
 
   handlers: {
-    'LOAD_MESSAGES_START': 'start',
-    'LOAD_MESSAGES_FAILURE': 'failure',
-    'LOAD_MESSAGES_SUCCESS': 'success'
+    'FETCH_MESSAGES_START': 'start',
+    'FETCH_MESSAGES_FAILURE': 'failure',
+    'FETCH_MESSAGES_SUCCESS': 'success'
   },
 
   initialize: function() {
@@ -43,4 +43,4 @@ var LoadMessagesStore = createStore({
   }
 });
 
-module.exports = LoadMessagesStore;
+module.exports = FetchMessagesStore;

@@ -6,7 +6,7 @@ var ContactStore = createStore({
   storeName: 'ContactStore',
 
   handlers: {
-    'LOAD_CONTACTS_SUCCESS': 'loadContacts',
+    'FETCH_CONTACTS_SUCCESS': 'fetchContacts',
     'CREATE_CONTACT_SUCCESS': 'createContact'
   },
 
@@ -14,7 +14,7 @@ var ContactStore = createStore({
     this.contactsById = {};
   },
 
-  loadContacts: function(contacts) {
+  fetchContacts: function(contacts) {
     this.contactsById = reduce(contacts, function(result, contact) {
       result[contact.id] = contact;
       return result;

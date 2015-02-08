@@ -1,17 +1,17 @@
-var debug = require('debug')('app:loadContacts');
+var debug = require('debug')('app:fetchContacts');
 
 module.exports = function(context, payload, done) {
   debug('Started');
-  context.dispatch('LOAD_CONTACTS_START');
+  context.dispatch('FETCH_CONTACTS_START');
   context.api.getContacts(function(err, contacts) {
     if (err) {
       debug('Failed');
-      context.dispatch('LOAD_CONTACTS_FAILURE', err);
+      context.dispatch('FETCH_CONTACTS_FAILURE', err);
       done();
       return;
     }
     debug('Success');
-    context.dispatch('LOAD_CONTACTS_SUCCESS', contacts);
+    context.dispatch('FETCH_CONTACTS_SUCCESS', contacts);
     done();
   });
 };

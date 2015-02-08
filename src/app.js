@@ -10,6 +10,6 @@ app.registerStore(require('./stores/AuthStore'));
 app.registerStore(require('./stores/ContactStore'));
 app.registerStore(require('./stores/CreateContactStore'));
 app.registerStore(require('./stores/MessageStore'));
-app.registerStore(require('./stores/LoadMessagesStore'));
+app.registerStore(require('./stores/FetchMessagesStore'));
 
 module.exports = app;
