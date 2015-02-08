@@ -8,7 +8,7 @@ var FluxibleMixin = require('fluxible').Mixin;
 var ContactStore = require('../stores/ContactStore');
 var MessageStore = require('../stores/MessageStore');
 var FetchMessagesStore = require('../stores/FetchMessagesStore');
-var fetchContacts = require('../actions/fetchContacts');
+var fetchContact = require('../actions/fetchContact');
 var fetchMessages = require('../actions/fetchMessages');
 var Loading = require('./Loading.jsx');
 
@@ -20,7 +20,7 @@ var ContactMessages = React.createClass({
 
     fetchData: function(context, params, query, done) {
       concurrent([
-        context.executeAction.bind(context, fetchContacts, {}),
+        context.executeAction.bind(context, fetchContact, {contactId: params.id}),
         context.executeAction.bind(context, fetchMessages, {contactId: params.id})
       ], done || function() {});
     }

@@ -6,15 +6,16 @@ var ContactStore = createStore({
   storeName: 'ContactStore',
 
   handlers: {
-    'FETCH_CONTACTS_SUCCESS': 'fetchContacts',
-    'CREATE_CONTACT_SUCCESS': 'createContact'
+    'FETCH_CONTACTS_SUCCESS': 'setContacts',
+    'FETCH_CONTACT_SUCCESS': 'addContact',
+    'CREATE_CONTACT_SUCCESS': 'addContact'
   },
 
   initialize: function() {
     this.contactsById = {};
   },
 
-  fetchContacts: function(contacts) {
+  setContacts: function(contacts) {
     this.contactsById = reduce(contacts, function(result, contact) {
       result[contact.id] = contact;
       return result;
@@ -22,7 +23,7 @@ var ContactStore = createStore({
     this.emitChange();
   },
 
-  createContact: function(contact) {
+  addContact: function(contact) {
     this.contactsById[contact.id] = contact;
     this.emitChange();
   },

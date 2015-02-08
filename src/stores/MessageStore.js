@@ -4,14 +4,14 @@ var MessageStore = createStore({
   storeName: 'MessageStore',
 
   handlers: {
-    'FETCH_MESSAGES_SUCCESS': 'fetchMessages'
+    'FETCH_MESSAGES_SUCCESS': 'setMessages'
   },
 
   initialize: function() {
     this.messagesbyContactId = {};
   },
 
-  fetchMessages: function(payload) {
+  setMessages: function(payload) {
     this.messagesbyContactId[payload.contactId] = payload.messages;
     this.emitChange();
   },

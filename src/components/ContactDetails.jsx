@@ -4,7 +4,7 @@ var Router = require('react-router');
 var Link = Router.Link;
 var AuthMixin = require('../utils/AuthMixin');
 var ContactStore = require('../stores/ContactStore');
-var fetchContacts = require('../actions/fetchContacts');
+var fetchContact = require('../actions/fetchContact');
 
 var ContactDetails = React.createClass({
   mixins: [FluxibleMixin, Router.State, AuthMixin],
@@ -13,7 +13,7 @@ var ContactDetails = React.createClass({
     storeListeners: [ContactStore],
 
     fetchData: function(context, params, query, done) {
-      context.executeAction(fetchContacts, {}, done);
+      context.executeAction(fetchContact, {contactId: params.id}, done);
     }
   },
 
