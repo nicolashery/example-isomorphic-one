@@ -7,7 +7,9 @@ module.exports = function() {
     plugContext: function() {
       return {
         plugActionContext: function(actionContext) {
-          actionContext.router = _router;
+          actionContext.getRouter = function() {
+            return _router;
+          };
         }
       };
     },

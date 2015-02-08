@@ -49,9 +49,9 @@ var renderApp = function(context, location, cb) {
         return cb(err);
       }
 
-      var contextState = 'window.App=' + serialize(app.dehydrate(context)) + ';';
+      var dehydratedState = 'window.__DATA__=' + serialize(app.dehydrate(context)) + ';';
       var html = React.renderToStaticMarkup(React.createElement(HtmlComponent, {
-        state: contextState,
+        state: dehydratedState,
         markup: React.withContext(context.getComponentContext(), function() {
           return React.renderToString(React.createElement(Handler));
         })
@@ -62,17 +62,24 @@ var renderApp = function(context, location, cb) {
 };
 
 server.use(function(req, res, next) {
+  if (config.DISABLE_ISOMORPHISM) {
+    // Send empty HTML with just the config values
+    // all rendering will be done by the client
+    var serializedConfig = 'window.__CONFIG__=' + serialize(config) + ';';
+    var html = React.renderToStaticMarkup(React.createElement(HtmlComponent, {
+      config: serializedConfig
+    }));
+    res.send(html);
+    return;
+  }
+
   var context = app.createContext({
     req: req,
     res: res,
     config: config
   });
 
-  context.getActionContext().executeAction(loadSession, {}, function(err) {
-    if (err) {
-      return next(err);
-    }
-
+  context.getActionContext().executeAction(loadSession, {}, function() {
     renderApp(context, req.url, function(err, html) {
       if (err && err.notFound) {
         return res.status(404).send(html);

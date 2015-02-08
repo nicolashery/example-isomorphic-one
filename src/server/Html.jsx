@@ -2,8 +2,9 @@ var React = require('react');
 
 var Html = React.createClass({
     propTypes: {
-      markup: React.PropTypes.string.isRequired,
-      state: React.PropTypes.string.isRequired
+      markup: React.PropTypes.string,
+      state: React.PropTypes.string,
+      config: React.PropTypes.string
     },
 
     render: function() {
@@ -18,6 +19,7 @@ var Html = React.createClass({
           <div id="app" dangerouslySetInnerHTML={{__html: this.props.markup}}></div>
         </body>
         <script dangerouslySetInnerHTML={{__html: this.props.state}}></script>
+        <script dangerouslySetInnerHTML={{__html: this.props.config}}></script>
         <script src="/public/client.js" defer></script>
         </html>
       );

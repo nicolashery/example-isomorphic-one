@@ -18,7 +18,7 @@ module.exports = function(context, payload, done) {
     // NOTE: possible race condition here
     // the AuthStore needs to set its state to "authenticated"
     // before the transition
-    context.router.transitionTo('/contacts');
+    context.getRouter().transitionTo('/contacts');
     done();
   });
 };
