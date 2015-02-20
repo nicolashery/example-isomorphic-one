@@ -1,4 +1,6 @@
-# Example isomorphic JavaScript app
+# Exploring Isomorphic JavaScript
+
+Code for the blog post [Exploring Isomorphic JavaScript](http://nicolashery.com/exploring-isomorphic-javascript/).
 
 Tech stack:
 
