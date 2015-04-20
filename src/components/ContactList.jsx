@@ -1,14 +1,18 @@
 var React = require('react');
 var map = require('lodash/collection/map');
-var Router = require('react-router');
+var Router = require('react-router/build/npm/lib');
 var Link = Router.Link;
 var AuthMixin = require('../utils/AuthMixin');
-var FluxibleMixin = require('fluxible').Mixin;
+var FluxibleMixin = require('fluxible/addons/FluxibleMixin');
 var ContactStore = require('../stores/ContactStore');
 var fetchContacts = require('../actions/fetchContacts');
 var NewContact = require('./NewContact.jsx');
 
 var ContactList = React.createClass({
+  contextTypes: {
+    router: React.PropTypes.func.isRequired
+  },
+
   mixins: [FluxibleMixin, AuthMixin],
 
   statics: {

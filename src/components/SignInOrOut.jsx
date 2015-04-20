@@ -1,11 +1,15 @@
 var React = require('react');
-var FluxibleMixin = require('fluxible').Mixin;
-var Router = require('react-router');
+var FluxibleMixin = require('fluxible/addons/FluxibleMixin');
+var Router = require('react-router/build/npm/lib');
 var Link = Router.Link;
 var AuthStore = require('../stores/AuthStore');
 var signOut = require('../actions/signOut');
 
 var SignInOrOut = React.createClass({
+  contextTypes: {
+    router: React.PropTypes.func.isRequired
+  },
+
   mixins: [FluxibleMixin],
 
   statics: {

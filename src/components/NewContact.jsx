@@ -1,10 +1,13 @@
 var React = require('react');
-var FluxibleMixin = require('fluxible').Mixin;
-var Navigation = require('react-router').Navigation;
+var FluxibleMixin = require('fluxible/addons/FluxibleMixin');
 var CreateContactStore = require('../stores/CreateContactStore');
 
 var NewContact = React.createClass({
-  mixins: [FluxibleMixin, Navigation],
+  contextTypes: {
+    router: React.PropTypes.func.isRequired
+  },
+
+  mixins: [FluxibleMixin],
 
   statics: {
     storeListeners: [CreateContactStore]
@@ -65,7 +68,7 @@ var NewContact = React.createClass({
       return;
     }
     this.refs.name.getDOMNode().value = '';
-    this.transitionTo('contact-create', {}, {name: name});
+    this.context.router.transitionTo('contact-create', {}, {name: name});
   },
 
   renderError: function() {

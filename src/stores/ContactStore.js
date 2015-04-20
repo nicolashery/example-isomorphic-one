@@ -1,4 +1,4 @@
-var createStore = require('fluxible/utils/createStore');
+var createStore = require('fluxible/addons/createStore');
 var reduce = require('lodash/collection/reduce');
 var values = require('lodash/object/values');
 

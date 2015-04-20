@@ -5,10 +5,11 @@ var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var serialize = require('serialize-javascript');
 var React = require('react');
-var Router = require('react-router');
-var routes = require('../routes.jsx');
+var Router = require('react-router/build/npm/lib');
+var FluxibleComponent = require('fluxible/addons/FluxibleComponent');
 var debug = require('debug')('app:server');
 var app = require('../app');
+var routes = require('../routes.jsx');
 var api = require('./api');
 var HtmlComponent = require('./Html.jsx');
 var fetchData = require('../utils/fetchData');
@@ -34,6 +35,7 @@ var renderApp = function(context, location, cb) {
     },
     onError: function(err) {
       debug('Routing Error', err);
+      cb(err);
     }
   });
 
@@ -50,11 +52,14 @@ var renderApp = function(context, location, cb) {
       }
 
       var dehydratedState = 'window.__DATA__=' + serialize(app.dehydrate(context)) + ';';
+      var appMarkup = React.renderToString(React.createElement(
+        FluxibleComponent,
+        {context: context.getComponentContext()},
+        React.createElement(Handler)
+      ));
       var html = React.renderToStaticMarkup(React.createElement(HtmlComponent, {
         state: dehydratedState,
-        markup: React.withContext(context.getComponentContext(), function() {
-          return React.renderToString(React.createElement(Handler));
-        })
+        markup: appMarkup
       }));
       cb(null, html);
     });

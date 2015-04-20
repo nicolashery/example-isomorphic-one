@@ -1,5 +1,5 @@
 var React = require('react');
-var FluxibleMixin = require('fluxible').Mixin;
+var FluxibleMixin = require('fluxible/addons/FluxibleMixin');
 var AuthStore = require('../stores/AuthStore');
 var signIn = require('../actions/signIn');
 

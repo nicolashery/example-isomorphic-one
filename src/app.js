@@ -1,6 +1,6 @@
-var FluxibleApp = require('fluxible');
+var Fluxible = require('fluxible');
 
-var app = new FluxibleApp();
+var app = new Fluxible();
 
 app.plug(require('./utils/apiPlugin'));
 app.plug(require('./utils/cookiePlugin'));

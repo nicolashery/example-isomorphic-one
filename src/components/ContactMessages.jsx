@@ -1,10 +1,10 @@
 var React = require('react');
 var concurrent = require('contra').concurrent;
 var map = require('lodash/collection/map');
-var Router = require('react-router');
+var Router = require('react-router/build/npm/lib');
 var Link = Router.Link;
 var AuthMixin = require('../utils/AuthMixin');
-var FluxibleMixin = require('fluxible').Mixin;
+var FluxibleMixin = require('fluxible/addons/FluxibleMixin');
 var ContactStore = require('../stores/ContactStore');
 var MessageStore = require('../stores/MessageStore');
 var FetchMessagesStore = require('../stores/FetchMessagesStore');
@@ -13,7 +13,11 @@ var fetchMessages = require('../actions/fetchMessages');
 var Loading = require('./Loading.jsx');
 
 var ContactMessages = React.createClass({
-  mixins: [FluxibleMixin, Router.State, AuthMixin],
+  contextTypes: {
+    router: React.PropTypes.func.isRequired
+  },
+
+  mixins: [FluxibleMixin, AuthMixin],
 
   statics: {
     storeListeners: [ContactStore, MessageStore, FetchMessagesStore],
@@ -43,7 +47,7 @@ var ContactMessages = React.createClass({
   },
 
   getContactId: function() {
-    return this.getParams().id;
+    return this.context.router.getCurrentParams().id;
   },
 
   render: function() {

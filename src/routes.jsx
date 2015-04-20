@@ -1,10 +1,10 @@
 var React = require('react');
-var Router = require('react-router');
+var Router = require('react-router/build/npm/lib');
 var Route = Router.Route;
 var Redirect = Router.Redirect;
 var NotFoundRoute = Router.NotFoundRoute;
 
-module.exports = [
+module.exports = (
   <Route path="/" handler={require('./components/App.jsx')}>
     <Route name="signin" handler={require('./components/SignIn.jsx')}/>
     <Route name="about" handler={require('./components/About.jsx')}/>
@@ -13,6 +13,6 @@ module.exports = [
     <Route name="contact-details" path="/contact/:id" handler={require('./components/ContactDetails.jsx')}/>
     <Route name="contact-messages" path="/contact/:id/messages" handler={require('./components/ContactMessages.jsx')}/>
     <Redirect from="/" to="contacts" />
-  </Route>,
-  <NotFoundRoute name="not-found" handler={require('./components/NotFound.jsx')}/>
-];
+    <NotFoundRoute name="not-found" handler={require('./components/NotFound.jsx')}/>
+  </Route>
+);

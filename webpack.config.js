@@ -1,4 +1,5 @@
 var path = require('path');
+var webpack = require('webpack');
 
 var config = {
   entry: './src/client',
@@ -10,7 +11,12 @@ var config = {
     loaders: [
       {test: /\.jsx$/, loader: 'jsx'}
     ]
-  }
+  },
+  plugins: [
+    // See:
+    // https://github.com/yahoo/fluxible/issues/138
+    new webpack.IgnorePlugin(/vertx/)
+  ]
 };
 
 module.exports = config;

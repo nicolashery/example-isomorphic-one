@@ -7,6 +7,14 @@ var Html = React.createClass({
       config: React.PropTypes.string
     },
 
+    getDefaultProps: function() {
+      return {
+        markup: '',
+        state: '',
+        config: ''
+      };
+    },
+
     render: function() {
       return (
         <html>

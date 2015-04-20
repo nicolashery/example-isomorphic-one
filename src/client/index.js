@@ -1,5 +1,6 @@
 var React = require('react');
-var Router = require('react-router');
+var Router = require('react-router/build/npm/lib');
+var FluxibleComponent = require('fluxible/addons/FluxibleComponent');
 var debug = require('debug');
 var bootstrapDebug = debug('app:client');
 var app = require('../app');
@@ -13,9 +14,11 @@ var mountNode = document.getElementById('app');
 var dehydratedState = window.__DATA__;
 
 function render(context, Handler) {
-  React.withContext(context.getComponentContext(), function() {
-    React.render(React.createElement(Handler), mountNode);
-  });
+  React.render(React.createElement(
+    FluxibleComponent,
+    {context: context.getComponentContext()},
+    React.createElement(Handler)
+  ), mountNode);
 }
 
 function createAppRouter(context) {

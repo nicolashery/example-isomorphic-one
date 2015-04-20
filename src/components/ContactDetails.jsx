@@ -1,13 +1,17 @@
 var React = require('react');
-var FluxibleMixin = require('fluxible').Mixin;
-var Router = require('react-router');
+var FluxibleMixin = require('fluxible/addons/FluxibleMixin');
+var Router = require('react-router/build/npm/lib');
 var Link = Router.Link;
 var AuthMixin = require('../utils/AuthMixin');
 var ContactStore = require('../stores/ContactStore');
 var fetchContact = require('../actions/fetchContact');
 
 var ContactDetails = React.createClass({
-  mixins: [FluxibleMixin, Router.State, AuthMixin],
+  contextTypes: {
+    router: React.PropTypes.func.isRequired
+  },
+
+  mixins: [FluxibleMixin, AuthMixin],
 
   statics: {
     storeListeners: [ContactStore],
@@ -32,7 +36,7 @@ var ContactDetails = React.createClass({
   },
 
   getContactId: function() {
-    return this.getParams().id;
+    return this.context.router.getCurrentParams().id;
   },
 
   render: function() {
